@@ -1,0 +1,1 @@
+# this class contains the implementation of a network with KANs
