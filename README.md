@@ -12,7 +12,6 @@ This project aims to explore the effectiveness and power of Kolmogorov-Arnold Ne
 - [Models](#models)
 - [Experiments](#experiments)
 - [Results](#results)
-- [Contributing](#contributing)
 
 ## Project Overview
 This project will test the hypothesis that KANs can achieve competitive or superior performance in classification tasks compared to sota neural network architectures (e.g. Resnet, EfficientNet, ViT, etc...)
