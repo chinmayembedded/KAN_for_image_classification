@@ -26,7 +26,7 @@ This project will test the hypothesis that KANs can achieve competitive or super
 ## Repository Structure
 The repository is organized as follows:
 
-## InstallationSS
+## Installation
 To get started, clone the repository and install the required dependencies:
 
 ```bash
