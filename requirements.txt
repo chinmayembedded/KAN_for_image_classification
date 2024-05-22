@@ -5,3 +5,4 @@ torch>=2.2.1
 matplotlib>=3.9.0
 torchinfo>=1.8.0
 timm>=1.0.3
+datasets>=2.19.1

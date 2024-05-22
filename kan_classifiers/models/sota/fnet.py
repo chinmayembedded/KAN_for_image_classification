@@ -1,6 +1,7 @@
 import timm
 import torch 
 import torch as nn
+import torch.nn.functional as F
 
 
 class FNet(nn.Module):

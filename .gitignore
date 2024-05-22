@@ -1,2 +1,4 @@
 *.egg-info/
 *.txt
+*.gz
+cifar10/
