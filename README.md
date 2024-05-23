@@ -17,10 +17,10 @@ This project aims to explore the effectiveness and power of Kolmogorov-Arnold Ne
 This project will test the hypothesis that KANs can achieve competitive or superior performance in classification tasks compared to sota neural network architectures (e.g. Resnet, EfficientNet, ViT, etc...)
 
 ## Objectives
-- [] Implement KANs and integrate them into a classification framework.
-- [] Benchmark KANs on various industry-standard datasets.
-- [] Compare the performance of KANs with SOTA architectures.
-- [] Analyze and document the results to highlight the strengths and weaknesses of KANs.
+- [ ] Implement KANs and integrate them into a classification framework.
+- [ ] Benchmark KANs on various industry-standard datasets.
+- [ ] Compare the performance of KANs with SOTA architectures.
+- [ ] Analyze and document the results to highlight the strengths and weaknesses of KANs.
 
 ## Repository Structure
 The repository is organized as follows:
