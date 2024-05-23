@@ -1,11 +1,13 @@
+import torch
 import numpy as np 
 import argparse
 from config import Params 
-from torch.utils.data import DataLoader, SubsetRandomSampler
 import torch.nn as nn
 import torch.nn.functional as F
-# from kan_classifiers.models.sota import FNet, convNet
-from kan_classifiers.data.data import data_pipeline
+from kan_classifiers.trainer.trainer import CifarTrainer
+from kan_classifiers.data.data import DataPipeline
+import torch.optim as optim
+
 
 
 def weight_init_normal(m):
@@ -20,31 +22,29 @@ def weight_init_normal(m):
 if __name__ == '__main__':
     if Params.DATASET_NAME == "cifar10":
         data_pipeline = DataPipeline(configs=Params.configs)
-        train_loader, val_loader, test_loader = data_pipeline.get_dataloader('cifar10')
-    print(train_loader)
+        train_loader, val_loader, test_loader = data_pipeline.get_dataloader(
+            dataset_name='cifar10', batch_size=Params.batch_size, num_workers=Params.num_workers)
 
-    criterion = nn.CrossEntropyLoss()
     
+    # Model architecture
     if Params.MODEL_NAME == "ConvNet":
         from kan_classifiers.models.sota.base_cnn import ConvNet
         model = ConvNet()
         model.apply(weight_init_normal)
 
-    
-    # model_1 = FNet()
-    # model_2 = convNet()
- 
-    # model_1.apply(weight_init_normal),model_2.apply(weight_init_normal)
+    # Loss and optmizer
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
     if torch.cuda.is_available():
-        model_1.cuda()
-        model_2.cuda()
+        model.cuda()
 
-    # m1_loss, m1_acc = trainNet(model_1, 0.01, train_loader, valid_loader)
-    # m2_loss, m2_acc = trainNet(model_2, 0.01, train_loader, valid_loader)
+    if Params.DATASET_NAME == "cifar10":
+        trainer = CifarTrainer()
 
+    trainer.train_loop(train_loader, val_loader, model, optimizer, criterion, Params.model_path, Params.n_epochs)
 
-    # # Loading the model from the lowest validation loss 
-    # model_1.load_state_dict(torch.load('FNet_model.pth'))
-    # model_2.load_state_dict(torch.load('convNet_model.pth'))
+    model.load_state_dict(torch.load(Params.model_path))
+
+    trainer.evaluate_model(test_loader, model, criterion, Params.batch_size)
 
