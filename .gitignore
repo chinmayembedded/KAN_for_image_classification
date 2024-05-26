@@ -2,3 +2,4 @@
 *.txt
 *.gz
 cifar10/
+__pycache__/
