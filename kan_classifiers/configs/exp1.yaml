@@ -1,1 +1,12 @@
 # yaml file to define experiments
+experiment:
+  exp_name: exp1
+model:
+  model_name: dinov2-base
+optimization:
+  epoch: 10
+  lr: 1e-3
+dataset:
+  dataset_name: cifar10
+logging:
+  folder: /app/kan_classifiers/kan_classifiers/logs
