@@ -18,7 +18,8 @@ setup(
         'matplotlib',
         'torchinfo',
         'timm',
-        'datasets'
+        'datasets',
+        'transformers'
     ],
     python_requires='>=3.10',
 )
