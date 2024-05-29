@@ -8,5 +8,10 @@ optimization:
   lr: 1e-3
 dataset:
   dataset_name: cifar10
+  datapath: /app/kan_classifiers/kan_classifiers/data/cifar10
+  batch_size: 64
+  val_split: 0.3
+  num_workers: 6
+  pin_memory: True 
 logging:
   folder: /app/kan_classifiers/kan_classifiers/logs
