@@ -1,17 +1,25 @@
 # yaml file to define experiments
 experiment:
   exp_name: exp1
+  exp_parent_folder: /app/kan_classifiers/kan_classifiers/experiments
+  output_dir: '/app/kan_classifiers/kan_classifiers/experiments'
+  save_every: 5
 model:
   model_name: dinov2-base
+  hidden_features: 256
 optimization:
   epoch: 10
   lr: 1e-3
+  optim_name: Adam
+  criterion: CrossEntropy
+  device: cuda
 dataset:
   dataset_name: cifar10
+  n_categories: 10
   datapath: /app/kan_classifiers/kan_classifiers/data/cifar10
   batch_size: 64
   val_split: 0.3
-  num_workers: 6
-  pin_memory: True 
+  num_workers: 3
+  pin_memory: True
 logging:
-  folder: /app/kan_classifiers/kan_classifiers/logs
+  folder: /app/kan_classifiers/kan_classifiers/experiments

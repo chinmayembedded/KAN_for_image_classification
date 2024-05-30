@@ -3,3 +3,5 @@
 *.gz
 cifar10/
 __pycache__/
+*.log
+*.csv

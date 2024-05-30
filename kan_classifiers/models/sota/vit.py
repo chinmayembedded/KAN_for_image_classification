@@ -10,7 +10,7 @@ class CustomViT(nn.Module):
     
     def forward(self, x):
         output = self.backbone(x)
-        last_hidden_states = output.last_hidden_state
+        last_hidden_states = output.last_hidden_state[:, 0, :]
         output = self.head(last_hidden_states)
         return output
 

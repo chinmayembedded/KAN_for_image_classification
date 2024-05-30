@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader
 import random
 import numpy as np
 from torch.utils.data import random_split
+from tqdm.auto import tqdm
 
 random.seed(42)
 np.random.seed(42)
@@ -39,7 +40,7 @@ class DataPipeline:
         testset = datasets.CIFAR10(root=self.configs['datapath'], train=False, download=True, transform=transforms_test)
 
         # calculating the splits
-        train_size = int((1-val_split) * len(full_trainset))
+        train_size = int((1-self.configs['val_split']) * len(full_trainset))
         val_size = len(full_trainset) - train_size
 
         trainset, valset = random_split(full_trainset, [train_size, val_size])
@@ -65,49 +66,4 @@ class DataPipeline:
         testset_load = DataLoader(testset, batch_size=1, shuffle=False, num_workers=self.configs['num_workers'], pin_memory=self.configs['pin_memory'])
 
         return train_load, testset_load
-    
-# testing pipeline
-params = None
-import yaml
-with open('/app/kan_classifiers/kan_classifiers/configs/exp1.yaml', 'r') as config_file:
-    params = yaml.load(config_file, Loader=yaml.FullLoader)
-
-# EXPERIMENT
-exp_name = params['experiment']['exp_name']
-
-# MODEL
-model_name = params['model']['model_name']
-
-# OPTIMIZATION
-epoch = params['optimization']['epoch']
-lr = params['optimization']['lr']
-
-# DATASET
-dataset_name = params['dataset']['dataset_name']
-datapath = params['dataset']['datapath']
-batch_size = params['dataset']['batch_size']
-val_split = params['dataset']['val_split']
-num_workers = params['dataset']['num_workers']
-pin_memory = params['dataset']['pin_memory']
-
-# LOGGING
-log_folder = params['logging']['folder']
-
-data_pipeline = DataPipeline(
-    dataset_name=dataset_name,
-    datapath=datapath, 
-    batch_size=batch_size, 
-    num_workers=num_workers, 
-    pin_memory=pin_memory, 
-    val_split=val_split
-    )
-
-cifar10_train, cifar10_val, cifar10_test = data_pipeline.get_dataloader()
-from kan_classifiers.models.sota.vit import CustomViT
-
-model = CustomViT(out_features=10, hidden_features=256).to('cuda')
-for data, label in cifar10_train:
-    data = data.to('cuda')
-    label = label.to('cuda')
-    pred = model(data)
 
