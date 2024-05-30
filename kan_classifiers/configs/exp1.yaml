@@ -2,7 +2,6 @@
 experiment:
   exp_name: exp1
   exp_parent_folder: /app/kan_classifiers/kan_classifiers/experiments
-  output_dir: '/app/kan_classifiers/kan_classifiers/experiments'
   save_every: 5
 model:
   model_name: dinov2-base
