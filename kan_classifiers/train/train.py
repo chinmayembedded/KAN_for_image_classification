@@ -160,7 +160,7 @@ def train(params):
     info_logger.info(f'Training finished!')
     info_logger.info('Saving model...')
     torch.save(os.path.join(log_folder, exp_name, 'model.pth'))
-    info_logger.info('Saving model...')
+    info_logger.info('Model saved!')
 
 
 
