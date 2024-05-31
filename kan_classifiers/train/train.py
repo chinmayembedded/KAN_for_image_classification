@@ -44,7 +44,6 @@ def train(params):
     # EXPERIMENT
     exp_name = params['experiment']['exp_name']
     exp_parent_path = params['experiment']['exp_parent_folder']
-    output_dir = params['experiment']['output_dir']
     save_every = params['experiment']['save_every']
 
     # MODEL
@@ -105,6 +104,7 @@ def train(params):
         pass
     
     best_val_loss = float('inf')
+    scaler = torch.cuda.amp.GradScaler(enabled=True)
 
     for e in range(start_epoch+1, n_epochs+1):
         info_logger.info(f'Start epoch {e}/{n_epochs}')
@@ -115,16 +115,18 @@ def train(params):
 
         model.train()
         for data, labels in train_loop:
-            optimizer.zero_grad()
             data = data.to(device)
             labels = labels.to(device)
-            pred = model(data)
-            loss = criterion(pred, labels)
-            loss.backward()
-            optimizer.step()
+            with torch.autocast(device_type=device, dtype=torch.float16, enabled=True):
+                pred = model(data)
+                loss = criterion(pred, labels)
+            scaler.scale(loss).backward()
+            scaler.step(optimizer)
+            scaler.update()
+            optimizer.zero_grad()
             running_train_loss += loss.item()
-        
-        epoch_train_loss = running_train_loss / len(cifar10_train)
+            
+            epoch_train_loss = running_train_loss / len(cifar10_train)
 
         # val loop
         val_loop = tqdm(cifar10_val, total=len(cifar10_val))
@@ -142,8 +144,8 @@ def train(params):
         
 
         end_time = time.time()
-        info_logger.info(f'Epoch {e+1}/{n_epochs} completed')
-        train_logger.log({'train_loss':epoch_train_loss, 'val_loss':epoch_val_loss, 'epoch':e+1, 'time':format_time(end_time-start_time)})
+        info_logger.info(f'Epoch {e}/{n_epochs} completed')
+        train_logger.log({'train_loss':epoch_train_loss, 'val_loss':epoch_val_loss, 'epoch':e, 'time':format_time(end_time-start_time)})
 
         if epoch_val_loss < best_val_loss:
             best_val_loss = epoch_val_loss
@@ -153,13 +155,14 @@ def train(params):
             checkpoint = {
                 'epoch':e,
                 'optimizer':optimizer.state_dict(),
-                'model':model.state_dict()
+                'model':model.state_dict(),
+                'best_val_loss':best_val_loss
             }
-            torch.save(log_exp_path = os.path.join(log_folder, exp_name, 'checkpoint.pth'))
+            torch.save(checkpoint, os.path.join(log_folder, exp_name, 'checkpoint.pth'))
     
     info_logger.info(f'Training finished!')
     info_logger.info('Saving model...')
-    torch.save(os.path.join(log_folder, exp_name, 'model.pth'))
+    torch.save(model.state_dict(), os.path.join(log_folder, exp_name, 'model.pth'))
     info_logger.info('Model saved!')
 
 

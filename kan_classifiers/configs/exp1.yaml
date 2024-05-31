@@ -8,7 +8,7 @@ model:
   hidden_features: 256
 optimization:
   epoch: 10
-  lr: 1e-3
+  lr: 5e-3
   optim_name: Adam
   criterion: CrossEntropy
   device: cuda
@@ -16,7 +16,7 @@ dataset:
   dataset_name: cifar10
   n_categories: 10
   datapath: /app/kan_classifiers/kan_classifiers/data/cifar10
-  batch_size: 64
+  batch_size: 128
   val_split: 0.3
   num_workers: 3
   pin_memory: True
